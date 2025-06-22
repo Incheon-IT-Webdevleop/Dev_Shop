@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shop?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: shop_db
+    password: qwer1234
+
+  security:
+    user:
+      name: admin       # 기본 로그인 아이디 (기본 보안 설정 사용 시)
+      password: admin   # 기본 비밀번호
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.shop.shop.user  # VO, DTO 위치
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    default-fetch-size: 100
+    default-statement-timeout: 30
