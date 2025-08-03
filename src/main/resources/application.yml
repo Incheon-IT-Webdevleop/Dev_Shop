@@ -13,6 +13,10 @@ spring:
       name: admin       # 기본 로그인 아이디 (기본 보안 설정 사용 시)
       password: admin   # 기본 비밀번호
 
+  mvc:                  # swagger 설정
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.shop.shop.user  # VO, DTO 위치
