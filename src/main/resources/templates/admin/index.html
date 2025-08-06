@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지</title>
+    <link href="css/admin/index.css" rel="stylesheet"/>
+</head>
+<body>
+    <!-- header -->
+    <div th:replace="~{ /admin/header.html :: header }"></div>
+
+    <!-- sidebar, content -->
+     <div style="display:flex;">
+         <div th:replace="~{ /admin/sidebar.html :: sidebar }"></div>
+         <div></div>
+     </div>
+
+    <!-- footer -->
+    <div th:replace="~{ /admin/footer.html :: footer }"></div>
+
+    <script src="/js/admin/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>header</title>
+    <link rel="stylesheet" href="/static/css/admin/index.css">
+</head>
+<body>
+     <div  th:fragment="header">
+        <nav class="navbar">
+            <a class="title" href="/admin/index.html">ADMIN PAGE</a>
+
+            <div class="login_section">
+                <p>로그인유저 ID</p>
+                <p>로그아웃</p>
+                <a>서비스 페이지 바로가기</a>
+            </div>
+            
+        </nav>
+     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
