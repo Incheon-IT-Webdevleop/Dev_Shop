@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>header</title>
     <link rel="stylesheet" href="/static/css/admin/index.css">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
      <div  th:fragment="header">
@@ -12,9 +14,9 @@
             <a class="title" href="/admin/index.html">ADMIN PAGE</a>
 
             <div class="login_section">
-                <p>로그인유저 ID</p>
-                <p>로그아웃</p>
-                <a>서비스 페이지 바로가기</a>
+                <p><i class="login_icon fa-solid fa-user"></i>USER ID</p>
+                <p><i class="login_icon fa-solid fa-arrow-right-from-bracket"></i>LOGOUT</p>
+                <a><i class="login_icon fa-solid fa-shop"></i>SHOP</a>
             </div>
             
         </nav>

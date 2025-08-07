@@ -13,4 +13,5 @@ public class ViewAdminController {
     public String index() {
         return "admin/index";
     }
+
 }
