@@ -3,7 +3,7 @@
 <mapper namespace="com.shop.shop.oder.OrderMapper">
 
     <!-- 월별 주문현황 조회 쿼리 -->
-    <select id="getOderByMonth" resultType="String">
+    <select id="getOderByMonth" resultType="com.shop.shop.oder.OrderDto">
         SELECT
         DATE_FORMAT(orderAt, '%Y-%m') AS 년월,
         COUNT(*) AS 전체주문건수,
