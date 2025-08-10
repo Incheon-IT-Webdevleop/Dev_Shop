@@ -25,6 +25,10 @@ body {
   margin: 0px;
 }
 
+.sidebar {
+  width: 400px;
+}
+
 
 .navbar {
  width: 100%;
