@@ -13,7 +13,8 @@ public class UserService implements UserMapper{
 
     @Override
     public String selectOne() {
-        System.out.println(userMapper.selectOne());
-        return userMapper.selectOne();
+//        System.out.println(userMapper.selectOne());
+//        return userMapper.selectOne();r
+        return null;
     }
 }

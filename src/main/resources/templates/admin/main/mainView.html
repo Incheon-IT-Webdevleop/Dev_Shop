@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"  
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{admin/index}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIN</title>
+    <link rel="stylesheet" href="/css/admin/mainView.css">
+
+</head>
+<body>
+    <div class="content" layout:fragment="content">
+        <div class="container">
+            <div class="row g-2">
+                <div class="col-6 oderStatusChart">
+                    날짜별 주문현황 그래프
+
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="col-6 oderStatusTable">
+                    <p>날짜별 주문현황 테이블</p>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col"></th>
+                            <th scope="col">날짜</th>
+                            <th scope="col">주문</th>
+                            <th scope="col">환불</th>
+                            <th scope="col">교환</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td>@social</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-6 salesRankTable">
+                    <p>상품 판매 순위</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">순위</th>
+                                <th scope="col">상품명</th>
+                                <th scope="col">월간 주문수량</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</td>
+                                <td>상품명1</td>
+                                <td>300</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</td>
+                                <td >상품명2</td>
+                                <td>400</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-6 inqueryTable">
+                    <p>문의/답변 관리</p>
+                    
+                    <table class="table">
+                        <th scope="col">상품후기</th>
+                        <td scope="row">0/0</td>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script src="/js/admin/mainView.js"></script>
+    </th:block>
+
+</body>
+</html>

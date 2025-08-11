@@ -13,10 +13,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    PurchaseService purchaseService;
+//    @Autowired
+//    private UserService userService;
+//    @Autowired
+//    private PurchaseService purchaseService;
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {

@@ -25,6 +25,25 @@ body {
   margin: 0px;
 }
 
+.sidebarAndContent {
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 300px;
+  min-width: 300px;
+}
+
+.sidebarAndContent > .content {
+  flex: 1; /* 남은공간 모두 사용 */
+  width: 100%;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+
+
 
 .navbar {
  width: 100%;

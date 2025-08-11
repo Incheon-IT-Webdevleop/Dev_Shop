@@ -12,7 +12,8 @@ public class PurchaseService implements PurchaseMapper{
 
     @Override
     public String selectOne() {
-        System.out.println(purchaseMapper.selectOne());
-        return purchaseMapper.selectOne();
+//        System.out.println(purchaseMapper.selectOne());
+        return null;
+//        return(purchaseMapper.selectOne());
     }
 }
