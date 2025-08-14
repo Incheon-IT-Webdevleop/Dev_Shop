@@ -3,20 +3,24 @@
 <mapper namespace="com.shop.shop.order.OrderMapper">
 
     <!-- 월별 주문현황 조회 쿼리 -->
-    <select id="getOderByMonth" resultType="com.shop.shop.order.OrderDto">
+    <select id="getOderByMonth" resultType="java.util.HashMap">
         SELECT
-        DATE_FORMAT(orderAt, '%Y-%m') AS 년월,
-        COUNT(*) AS 전체주문건수,
-        SUM(TotalPrice) AS 전체주문금액,
-        COUNT(CASE WHEN ispayed = true THEN 1 END) AS 결제완료건수,
-        SUM(CASE WHEN ispayed = true THEN TotalPrice ELSE 0 END) AS 결제완료금액,
-        COUNT(CASE WHEN ispayed = false OR ispayed IS NULL THEN 1 END) AS 미결제건수,
-        SUM(CASE WHEN ispayed = false OR ispayed IS NULL THEN TotalPrice ELSE 0 END) AS 미결제금액,
+        DATE_FORMAT(orderAt, '%Y-%m') AS yearMonth,
+        COUNT(*) AS totalOrderCount,
+        SUM(TotalPrice) AS totalOrderAmount,
+        COUNT(CASE WHEN ispayed = true THEN 1 END) AS paidOrderCount,
+        SUM(CASE WHEN ispayed = true THEN TotalPrice ELSE 0 END) AS paidOrderAmount,
+        COUNT(CASE WHEN ispayed = false OR ispayed IS NULL THEN 1 END) AS unpaidOrderCount,
+        SUM(CASE WHEN ispayed = false OR ispayed IS NULL THEN TotalPrice ELSE 0 END) AS unpaidOrderAmount,
         ROUND(
         COUNT(CASE WHEN ispayed = true THEN 1 END) * 100.0 / COUNT(*), 2
-        ) AS 결제완료율
+        ) AS paymentCompletionRate,
+        AVG(TotalPrice) AS averageOrderAmount,
+        SUM(quantity) AS totalQuantity,
+        MIN(orderAt) AS firstOrderDate,
+        MAX(orderAt) AS lastOrderDate
         FROM Orders
         GROUP BY DATE_FORMAT(orderAt, '%Y-%m')
-        ORDER BY 년월;
+        ORDER BY yearMonth DESC;
     </select>
 </mapper>

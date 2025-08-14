@@ -3,8 +3,9 @@ package com.shop.shop.order;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
-    List<OrderDto> getOderByMonth();
+    List<Map<String, Object>> getOderByMonth();
 }

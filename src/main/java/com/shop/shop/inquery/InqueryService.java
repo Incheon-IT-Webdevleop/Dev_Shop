@@ -11,10 +11,9 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class InqueryService implements InQueryMapper{
-    private InQueryMapper inQueryMapper;
+public class InqueryService{
+    private final InQueryMapper inQueryMapper;
 
-    @Override
     public List<InqueryDto> findAllInquery() {
         System.out.println(inQueryMapper.findAllInquery());
         return inQueryMapper.findAllInquery();

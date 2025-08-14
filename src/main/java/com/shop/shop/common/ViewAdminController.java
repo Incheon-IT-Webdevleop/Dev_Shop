@@ -27,4 +27,5 @@ public class ViewAdminController {
         return "/admin/salesMng/registPurchase";
     }
 
+
 }

@@ -19,6 +19,7 @@ public class PurchaseService {
         PageHelper.startPage(page, size);
 
         List<PurchaseDto> purchaseDtoList = purchaseMapper.selectAll();
+        System.out.println(purchaseMapper.selectAll() + "매입정보 select all");
 
         return new PageInfo<>(purchaseDtoList);
     }
