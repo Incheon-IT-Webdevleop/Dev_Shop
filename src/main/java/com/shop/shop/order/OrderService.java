@@ -16,7 +16,7 @@ public class OrderService {
     private final OrderMapper orderMapper;
 
     public List<Map<String, Object>> getOderByMonth() {
-        System.out.println(orderMapper.getOderByMonth());
+        System.out.println(orderMapper.getOderByMonth().size());
         return orderMapper.getOderByMonth();
     }
 }
