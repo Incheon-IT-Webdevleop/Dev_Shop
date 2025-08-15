@@ -102,7 +102,7 @@ const renderOrderTable = (data) => {
       <th scope="row">${item.yearMonth || '-'}</th>
       <td>
         <div>주문량 : ${formatNumber(item.monthlyOrderCount || 0)}건</div>
-        <div class="text-success">금액 : ${formatNumber(item.monthlyTotalAmount || 0)}</div>
+        <div class="text-success">금액 : ${formatNumber(item.monthlyTotalAmount || 0)}원</div>
       </td>
     `;
     tableBody.appendChild(row);
@@ -128,6 +128,21 @@ const updateChart = (data) => {
 // 천단위 콤마 formatter
 const formatNumber = (number) => {
   return new Intl.NumberFormat('ko-KR').format(number);
+}
+
+// datetime formatter 
+const formatDateTime = (dateTimeString) => {
+   if (!dateTimeString) return '-';
+   
+   const date = new Date(dateTimeString);
+   
+   const year = date.getFullYear();
+   const month = String(date.getMonth() + 1).padStart(2, '0');
+   const day = String(date.getDate()).padStart(2, '0');
+   const hours = String(date.getHours()).padStart(2, '0');
+   const minutes = String(date.getMinutes()).padStart(2, '0');
+   
+   return `${year}/${month}/${day} ${hours}:${minutes}`;
 }
 
 
