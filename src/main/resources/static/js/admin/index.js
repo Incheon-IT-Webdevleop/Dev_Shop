@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 const selectOne = () => {
 	console.log("selectOne");
 
@@ -12,3 +14,4 @@ const selectOne = () => {
 };
 
 selectOne();
+>>>>>>> main

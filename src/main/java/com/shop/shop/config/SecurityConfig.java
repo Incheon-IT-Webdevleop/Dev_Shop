@@ -1,8 +1,5 @@
 package com.shop.shop.config;
 
-import com.shop.shop.purchase.PurchaseService;
-import com.shop.shop.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

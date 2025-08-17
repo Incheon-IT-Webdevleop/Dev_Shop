@@ -22,17 +22,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "문의사항 API", description = "문의사항 API 확인")
-public class InqeuryContorller {
-    private InqueryService inqueryService;
+public class InqeuryController {
+    private final InqueryService inqueryService;
 
 
-    @GetMapping("/findAll")
+    @GetMapping("/findAll.do")
     @ResponseBody
     @Operation(summary = "findAll", description = "문의사항 전체 목록 가져오기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "조회 성공",
-                    content = @Content(mediaType = "application/json", schema = @Schema(type = "InquertDto.class"))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = InqueryDto.class))),
             @ApiResponse(responseCode = "500",
                     description = "서버 에러",
                     content = @Content(mediaType = "application/json"))
