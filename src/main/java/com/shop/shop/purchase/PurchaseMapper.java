@@ -1,9 +1,8 @@
 package com.shop.shop.purchase;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface PurchaseMapper {

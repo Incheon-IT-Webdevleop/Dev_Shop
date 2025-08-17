@@ -1,164 +1,354 @@
--- Member 테이블 샘플 데이터
-INSERT INTO `Member` (`memberIdx`, `email`, `password`, `name`, `phone`, `loginType`, `isActive`, `role`, `joinAt`, `lastLoginAt`) VALUES
-(1, 'admin@shop.com', 'hashed_password_1', '관리자', '010-1234-5678', 'local', true, 2, '2024-01-15 10:30:00', '2025-08-07 09:00:00'),
-(2, 'john.doe@email.com', 'hashed_password_2', '홍길동', '010-2345-6789', 'local', true, 0, '2024-02-20 14:15:00', '2025-08-06 18:30:00'),
-(3, 'jane.smith@email.com', 'hashed_password_3', '김영희', '010-3456-7890', 'kakao', true, 0, '2024-03-10 11:45:00', '2025-08-05 20:15:00'),
-(4, 'mike.wilson@email.com', 'hashed_password_4', '박철수', '010-4567-8901', 'google', true, 1, '2024-04-05 16:20:00', '2025-08-04 12:45:00'),
-(5, 'sarah.lee@email.com', 'hashed_password_5', '이수진', '010-5678-9012', 'local', false, 0, '2024-05-12 13:00:00', '2025-07-20 10:30:00');
+-- 회원 테이블
+CREATE TABLE `member` (
+	`memberIdx`	BIGINT	NOT NULL AUTO_INCREMENT COMMENT '회원 고유번호',
+	`email`	VARCHAR(255)	NOT NULL UNIQUE COMMENT '이메일 (중복 불가)',
+	`password`	VARCHAR(255)	NOT NULL COMMENT '암호화된 비밀번호',
+	`name`	VARCHAR(50)	NOT NULL COMMENT '회원명',
+	`phone`	VARCHAR(20)	NOT NULL COMMENT '전화번호',
+	`loginType`	VARCHAR(10)	NOT NULL DEFAULT 'LOCAL' COMMENT 'LOCAL, GOOGLE, KAKAO 등',
+	`isActive`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '계정 활성화 상태',
+	`role`	TINYINT	NOT NULL DEFAULT 0 COMMENT '0:일반회원, 1:관리자, 2:최고관리자',
+	`joinedAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '가입일시',
+	`lastLoginAt`	DATETIME	NULL COMMENT '마지막 로그인 일시',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`memberIdx`),
+	INDEX `idx_email` (`email`),
+	INDEX `idx_phone` (`phone`)
+) COMMENT '회원 정보';
 
--- profile 테이블 샘플 데이터
-INSERT INTO `profile` (`id`, `memberIdx`, `imgName`, `imgPath`, `updatedAt`) VALUES
-(1, 1, 'admin_profile.jpg', '/uploads/profiles/admin_profile.jpg', '2024-01-15 10:35:00'),
-(2, 2, 'hong_profile.jpg', '/uploads/profiles/hong_profile.jpg', '2024-02-20 14:20:00'),
-(3, 3, 'kim_profile.jpg', '/uploads/profiles/kim_profile.jpg', '2024-03-10 11:50:00'),
-(4, 4, NULL, NULL, '2024-04-05 16:25:00'),
-(5, 5, 'lee_profile.jpg', '/uploads/profiles/lee_profile.jpg', '2024-05-12 13:05:00');
+-- 회원 프로필 테이블
+CREATE TABLE `profile` (
+	`profileIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`memberIdx`	BIGINT	NOT NULL COMMENT '회원 고유번호',
+	`imgName`	VARCHAR(255)	NULL COMMENT '프로필 이미지 파일명',
+	`imgPath`	TEXT	NULL COMMENT '프로필 이미지 경로',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`profileIdx`),
+	UNIQUE KEY `uk_member_profile` (`memberIdx`)
+) COMMENT '회원 프로필';
 
--- ProductCatogory 테이블 샘플 데이터
-INSERT INTO `ProductCatogory` (`productCategoryIdx`, `name`, `major`) VALUES
-(1, '의류', 0),
-(2, '전자제품', 0),
-(3, '도서', 0),
-(4, '상의', 1),
-(5, '하의', 1),
-(6, '스마트폰', 1),
-(7, '노트북', 1),
-(8, '소설', 1),
-(9, '자기계발', 1);
+-- 주소 테이블
+CREATE TABLE `address` (
+	`addressIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`memberIdx`	BIGINT	NOT NULL COMMENT '회원 고유번호',
+	`addressName`	VARCHAR(50)	NOT NULL COMMENT '주소 별칭 (집, 회사 등)',
+	`postCode`	VARCHAR(10)	NOT NULL COMMENT '우편번호',
+	`address`	VARCHAR(255)	NOT NULL COMMENT '기본 주소',
+	`detailAddress`	VARCHAR(255)	NOT NULL COMMENT '상세 주소',
+	`recipient`	VARCHAR(50)	NOT NULL COMMENT '수령인',
+	`recipientPhone`	VARCHAR(20)	NOT NULL COMMENT '수령인 전화번호',
+	`isDefault`	BOOLEAN	NOT NULL DEFAULT FALSE COMMENT '기본 주소 여부',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`addressIdx`),
+	INDEX `idx_member` (`memberIdx`)
+) COMMENT '배송 주소';
 
--- Category 테이블 샘플 데이터
-INSERT INTO `Category` (`categoryIdx`, `categoryName`) VALUES
-('010', '패션의류'),
-('020', '전자기기'),
-('030', '도서/음반'),
-('040', '생활용품'),
-('050', '스포츠/레저');
+-- 상품 카테고리 테이블
+CREATE TABLE `productCategory` (
+	`categoryIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`name`	VARCHAR(50)	NOT NULL COMMENT '카테고리명',
+	`parentIdx`	BIGINT	NULL COMMENT '상위 카테고리 (NULL이면 대분류)',
+	`sortOrder`	INT	NOT NULL DEFAULT 0 COMMENT '정렬 순서',
+	`isActive`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '활성화 상태',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`categoryIdx`),
+	INDEX `idx_parent` (`parentIdx`),
+	INDEX `idx_sort` (`sortOrder`)
+) COMMENT '상품 카테고리';
 
--- Products 테이블 샘플 데이터
-INSERT INTO `Products` (`productIdx`, `productName`, `createdAt`, `updatedAt`, `price`, `productCode`, `productCategoryIdx`) VALUES
-(1, '프리미엄 코튼 반팔티', '2024-06-01 10:00:00', '2024-07-01 15:30:00', 25000, 1001, 4),
-(2, '클래식 데님 청바지', '2024-06-02 11:00:00', '2024-07-02 16:00:00', 65000, 1002, 5),
-(3, 'iPhone 15 Pro', '2024-06-03 12:00:00', '2024-07-03 10:15:00', 1390000, 2001, 6),
-(4, 'MacBook Air M2', '2024-06-04 13:00:00', '2024-07-04 14:20:00', 1490000, 2002, 7),
-(5, '해리포터 전집', '2024-06-05 14:00:00', NULL, 89000, 3001, 8),
-(6, '7가지 습관', '2024-06-06 15:00:00', '2024-07-06 09:45:00', 15000, 3002, 9);
-(101, '아이폰 15 Pro', '2025-01-01 09:00:00', '2025-01-01 09:00:00', 1200000, 1001, 1),
-(102, '맥북 프로 14인치', '2025-01-02 10:00:00', '2025-01-02 10:00:00', 2500000, 1002, 2),
-(103, '아이패드 에어', '2025-01-03 11:00:00', '2025-01-03 11:00:00', 800000, 1003, 1),
-(104, '에어팟 프로', '2025-01-04 12:00:00', '2025-01-04 12:00:00', 350000, 1004, 3),
-(105, '애플워치 울트라', '2025-01-05 13:00:00', '2025-01-05 13:00:00', 900000, 1005, 4),
-(106, '매직 키보드', '2025-01-06 14:00:00', '2025-01-06 14:00:00', 180000, 1006, 5),
-(107, '매직 마우스', '2025-01-07 15:00:00', '2025-01-07 15:00:00', 120000, 1007, 5),
-(108, '스튜디오 디스플레이', '2025-01-08 16:00:00', '2025-01-08 16:00:00', 2200000, 1008, 6),
-(109, '홈팟 미니', '2025-01-09 17:00:00', '2025-01-09 17:00:00', 150000, 1009, 7),
-(110, '프로 디스플레이 XDR', '2025-01-10 18:00:00', '2025-01-10 18:00:00', 7000000, 1010, 6),
-(111, '에어태그 4팩', '2025-01-11 19:00:00', '2025-01-11 19:00:00', 180000, 1011, 8),
-(112, '맥 미니 M2', '2025-01-12 20:00:00', '2025-01-12 20:00:00', 850000, 1012, 2),
-(113, '아이맥 24인치', '2025-01-13 21:00:00', '2025-01-13 21:00:00', 1800000, 1013, 2),
-(114, '맥북 에어 M2', '2025-01-14 22:00:00', '2025-01-14 22:00:00', 1500000, 1014, 2),
-(115, '애플 펜슬 2세대', '2025-01-15 23:00:00', '2025-01-15 23:00:00', 180000, 1015, 5);
+-- 상품 테이블
+CREATE TABLE `products` (
+	`productIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`productName`	VARCHAR(255)	NOT NULL COMMENT '상품명',
+	`productCode`	VARCHAR(50)	NOT NULL UNIQUE COMMENT '상품 코드',
+	`categoryIdx`	BIGINT	NOT NULL COMMENT '카테고리',
+	`price`	DECIMAL(10,2)	NOT NULL COMMENT '상품 가격',
+	`discountRate`	DECIMAL(5,2)	NOT NULL DEFAULT 0.00 COMMENT '할인율 (%)',
+	`stockQuantity`	INT	NOT NULL DEFAULT 0 COMMENT '재고 수량',
+	`isActive`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '판매 상태',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`productIdx`),
+	INDEX `idx_category` (`categoryIdx`),
+	INDEX `idx_product_code` (`productCode`),
+	INDEX `idx_price` (`price`)
+) COMMENT '상품 기본 정보';
 
--- productPost 테이블 샘플 데이터 (컬럼명 수정: delivery Fee -> deliveryFee)
-INSERT INTO `productPost` (`productIdx`, `delivery Fee`, `discountRate`, `productImgName`, `productImgPath`, `productDetails`, `isPublished`, `isDelete`) VALUES
-(1, 3000, 10, 'tshirt_main.jpg', '/uploads/products/tshirt_main.jpg', '100% 순면으로 제작된 프리미엄 반팔티입니다. 부드러운 착용감과 우수한 통기성을 자랑합니다.', true, false),
-(2, 3000, 15, 'jeans_main.jpg', '/uploads/products/jeans_main.jpg', '클래식한 디자인의 데님 청바지입니다. 다양한 스타일링에 어울리는 기본 아이템입니다.', true, false),
-(3, 0, 5, 'iphone15_main.jpg', '/uploads/products/iphone15_main.jpg', '최신 A17 Pro 칩셋과 티타늄 소재로 제작된 프리미엄 스마트폰입니다.', true, false),
-(4, 0, 8, 'macbook_main.jpg', '/uploads/products/macbook_main.jpg', 'M2 칩셋이 탑재된 경량 노트북으로 뛰어난 성능과 배터리 수명을 제공합니다.', true, false),
-(5, 3000, 20, 'harrypotter_main.jpg', '/uploads/products/harrypotter_main.jpg', 'J.K. 롤링의 대표작 해리포터 시리즈 완전판입니다.', true, false),
-(6, 3000, 0, 'habits_main.jpg', '/uploads/products/habits_main.jpg', '성공하는 사람들의 7가지 습관에 대한 자기계발서입니다.', false, false);
+-- 상품 상세 정보 테이블
+CREATE TABLE `productPost` (
+	`productIdx`	BIGINT	NOT NULL,
+	`deliveryFee`	DECIMAL(8,2)	NOT NULL DEFAULT 0.00 COMMENT '배송비',
+	`productImgName`	VARCHAR(255)	NOT NULL COMMENT '대표 이미지 파일명',
+	`productImgPath`	VARCHAR(500)	NOT NULL COMMENT '대표 이미지 경로',
+	`productDetails`	LONGTEXT	NOT NULL COMMENT '상품 상세 설명',
+	`isPublished`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '게시 상태',
+	`isDeleted`	BOOLEAN	NOT NULL DEFAULT FALSE COMMENT '삭제 상태',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`productIdx`)
+) COMMENT '상품 상세 정보';
 
--- size 테이블 샘플 데이터
-INSERT INTO `size` (`optionIdx`, `size`, `color`, `optionStock`, `productIdx`) VALUES
-(1, 'S', '화이트', 50, 1),
-(2, 'M', '화이트', 30, 1),
-(3, 'L', '화이트', 20, 1),
-(4, 'S', '블랙', 40, 1),
-(5, 'M', '블랙', 25, 1),
-(6, '28', '다크블루', 15, 2),
-(7, '30', '다크블루', 20, 2),
-(8, '32', '다크블루', 12, 2),
-(9, NULL, '티타늄 블루', 100, 3),
-(10, NULL, '티타늄 화이트', 85, 3),
-(11, NULL, '스페이스 그레이', 50, 4),
-(12, NULL, '실버', 45, 4);
+-- 상품 옵션 테이블 (사이즈, 색상 등)
+CREATE TABLE `productOption` (
+	`optionIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`productIdx`	BIGINT	NOT NULL COMMENT '상품 고유번호',
+	`optionType`	VARCHAR(20)	NOT NULL COMMENT '옵션 타입 (SIZE, COLOR 등)',
+	`optionValue`	VARCHAR(50)	NOT NULL COMMENT '옵션 값',
+	`additionalPrice`	DECIMAL(8,2)	NOT NULL DEFAULT 0.00 COMMENT '추가 가격',
+	`stock`	INT	NOT NULL DEFAULT 0 COMMENT '옵션별 재고',
+	`isActive`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '활성화 상태',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`optionIdx`),
+	INDEX `idx_product` (`productIdx`),
+	INDEX `idx_option_type` (`optionType`)
+) COMMENT '상품 옵션';
 
--- address 테이블 샘플 데이터
-INSERT INTO `address` (`addressIdx`, `memberIdx`, `addressName`, `postCode`, `address`, `detail_address`, `recipient`, `recipientPhone`, `createdAt`, `updatedAt`, `IsDefault`) VALUES
-(1, 2, '집', 06234, '서울특별시 강남구 테헤란로 123', '456호', '홍길동', 1023456789, '2024-02-20 14:25:00', '2024-02-20 14:25:00', true),
-(2, 2, '회사', 06789, '서울특별시 서초구 서초대로 789', '10층', '홍길동', 1023456789, '2024-03-15 10:15:00', '2024-03-15 10:15:00', false),
-(3, 3, '집', 07845, '경기도 성남시 분당구 판교역로 234', '101동 505호', '김영희', 1034567890, '2024-03-10 12:00:00', '2024-03-10 12:00:00', true),
-(4, 4, '집', 05432, '부산광역시 해운대구 센텀남대로 567', '1502호', '박철수', 1045678901, '2024-04-05 16:30:00', '2024-04-05 16:30:00', true);
+-- 주문 테이블
+CREATE TABLE `orders` (
+	`orderIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`orderNumber`	VARCHAR(50)	NOT NULL UNIQUE COMMENT '주문번호',
+	`memberIdx`	BIGINT	NOT NULL COMMENT '주문 회원',
+	`orderStatus`	VARCHAR(20)	NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING, PAID, SHIPPED, DELIVERED, CANCELLED',
+	`paymentMethod`	VARCHAR(20)	NOT NULL COMMENT '결제 방법',
+	`totalAmount`	DECIMAL(10,2)	NOT NULL COMMENT '총 주문 금액',
+	`discountAmount`	DECIMAL(10,2)	NOT NULL DEFAULT 0.00 COMMENT '할인 금액',
+	`deliveryFee`	DECIMAL(8,2)	NOT NULL DEFAULT 0.00 COMMENT '배송비',
+	`finalAmount`	DECIMAL(10,2)	NOT NULL COMMENT '최종 결제 금액',
+	`recipientName`	VARCHAR(50)	NOT NULL COMMENT '수령인',
+	`recipientPhone`	VARCHAR(20)	NOT NULL COMMENT '수령인 전화번호',
+	`deliveryAddress`	VARCHAR(500)	NOT NULL COMMENT '배송 주소',
+	`postCode`	VARCHAR(10)	NOT NULL COMMENT '우편번호',
+	`orderMemo`	TEXT	NULL COMMENT '주문 메모',
+	`isPaid`	BOOLEAN	NOT NULL DEFAULT FALSE COMMENT '결제 완료 여부',
+	`paidAt`	DATETIME	NULL COMMENT '결제 완료 일시',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`orderIdx`),
+	INDEX `idx_order_number` (`orderNumber`),
+	INDEX `idx_member` (`memberIdx`),
+	INDEX `idx_status` (`orderStatus`),
+	INDEX `idx_created_at` (`createdAt`)
+) COMMENT '주문 정보';
 
--- Orders 테이블 샘플 데이터
-INSERT INTO `Orders` (`orderIdx`, `productIdx`, `memberIdx`, `payMethod`, `TotalPrice`, `address`, `detailAddress`, `name`, `postCode`, `phone`, `ispayed`, `orderAt`, `quantity`) VALUES
-(1, 1, 2, '카드', 25500, '서울특별시 강남구 테헤란로 123', '456호', '홍길동', 06234, '010-2345-6789', true, '2024-07-15 14:30:00', 1),
-(2, 3, 2, '카드', 1390000, '서울특별시 강남구 테헤란로 123', '456호', '홍길동', 06234, '010-2345-6789', true, '2024-07-20 10:15:00', 1),
-(3, 2, 3, '무통장', 68000, '경기도 성남시 분당구 판교역로 234', '101동 505호', '김영희', 07845, '010-3456-7890', false, '2024-07-25 16:45:00', 1),
-(4, 5, 4, 'PayPal', 74200, '부산광역시 해운대구 센텀남대로 567', '1502호', '박철수', 05432, '010-4567-8901', true, '2024-08-01 11:20:00', 1);
-(5, 104, 1005, '카드', 89000, '광주광역시 서구 치평동', '105동 1205호', '정민호', 620120, '010-5678-9012', true, '2025-02-18 11:30:00', 2),
-(6, 105, 1006, '페이팔', 156000, '대전광역시 유성구 봉명동', '106동 606호', '강수진', 342050, '010-6789-0123', false, '2025-03-05 13:40:00', 4),
-(7, 102, 1007, '카드', 67000, '울산광역시 남구 삼산동', '107동 707호', '윤서연', 680300, '010-7890-1234', true, '2025-03-12 08:25:00', 1),
-(8, 106, 1008, '계좌이체', 234000, '경기도 수원시 영통구 매탄동', '108동 808호', '임태현', 443380, '010-8901-2345', true, '2025-03-22 15:50:00', 6),
-(9, 103, 1009, '카드', 43000, '경기도 성남시 분당구 정자동', '109동 909호', '한지은', 463810, '010-9012-3456', false, '2025-04-01 12:10:00', 2),
-(10, 107, 1010, '무통장입금', 98000, '경기도 안양시 동안구 평촌동', '110동 1010호', '조현우', 431080, '010-0123-4567', true, '2025-04-08 17:35:00', 3),
-(11, 101, 1011, '카드', 76000, '강원도 춘천시 효자동', '111동 1111호', '김소영', 243500, '010-1357-2468', true, '2025-04-15 10:20:00', 2),
-(12, 108, 1012, '페이팔', 189000, '충청북도 청주시 흥덕구 가경동', '112동 1212호', '이준석', 363400, '010-2468-1357', false, '2025-05-02 14:45:00', 5),
-(13, 109, 1013, '카드', 112000, '충청남도 천안시 동남구 신부동', '113동 313호', '박미경', 311400, '010-3579-0246', true, '2025-05-10 09:15:00', 3),
-(14, 104, 1014, '계좌이체', 65000, '전라북도 전주시 완산구 중화산동', '114동 414호', '최동현', 540950, '010-4680-1357', true, '2025-05-18 16:00:00', 1),
-(15, 110, 1015, '카드', 287000, '전라남도 광양시 중마동', '115동 515호', '정유진', 577750, '010-5791-2468', false, '2025-06-03 11:25:00', 7),
-(16, 105, 1016, '무통장입금', 134000, '경상북도 포항시 북구 두호동', '116동 616호', '강민석', 790834, '010-6802-3579', true, '2025-06-12 13:55:00', 4),
-(17, 102, 1017, '카드', 58000, '경상남도 창원시 의창구 팔용동', '117동 717호', '윤혜진', 642540, '010-7913-4680', true, '2025-06-20 08:40:00', 2),
-(18, 111, 1018, '페이팔', 178000, '제주특별자치도 제주시 일도이동', '118동 818호', '임건우', 690180, '010-8024-5791', false, '2025-07-05 15:30:00', 5),
-(19, 106, 1019, '카드', 92000, '세종특별자치시 한솔동', '119동 919호', '한수빈', 302670, '010-9135-6802', true, '2025-07-14 12:45:00', 3),
-(20, 103, 1020, '계좌이체', 148000, '경기도 고양시 일산동구 장항동', '120동 1020호', '조예린', 410837, '010-0246-7913', true, '2025-08-02 10:10:00', 4);
+-- 주문 상품 테이블
+CREATE TABLE `orderItems` (
+	`orderItemIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`orderIdx`	BIGINT	NOT NULL COMMENT '주문 고유번호',
+	`productIdx`	BIGINT	NOT NULL COMMENT '상품 고유번호',
+	`optionIdx`	BIGINT	NULL COMMENT '선택한 옵션',
+	`quantity`	INT	NOT NULL COMMENT '주문 수량',
+	`unitPrice`	DECIMAL(10,2)	NOT NULL COMMENT '단가',
+	`totalPrice`	DECIMAL(10,2)	NOT NULL COMMENT '총 가격',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`orderItemIdx`),
+	INDEX `idx_order` (`orderIdx`),
+	INDEX `idx_product` (`productIdx`)
+) COMMENT '주문 상품 상세';
 
--- PaymentHistory 테이블 샘플 데이터
-INSERT INTO `PaymentHistory` (`paymentIdx`, `memberIdx`, `orderIdx`, `productIdx`, `price`, `totalPrice`, `createdAt`, `status`) VALUES
-(1, 2, 1, 1, 25000, 25500, '2024-07-15 14:35:00', true),
-(2, 2, 2, 3, 1390000, 1390000, '2024-07-20 10:20:00', true),
-(3, 3, 3, 2, 65000, 68000, '2024-07-25 16:50:00', false),
-(4, 4, 4, 5, 89000, 74200, '2024-08-01 11:25:00', true);
+-- 결제 내역 테이블
+CREATE TABLE `paymentHistory` (
+	`paymentIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`orderIdx`	BIGINT	NOT NULL COMMENT '주문 고유번호',
+	`memberIdx`	BIGINT	NOT NULL COMMENT '결제 회원',
+	`paymentMethod`	VARCHAR(20)	NOT NULL COMMENT '결제 방법',
+	`amount`	DECIMAL(10,2)	NOT NULL COMMENT '결제 금액',
+	`paymentStatus`	VARCHAR(20)	NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING, SUCCESS, FAILED, CANCELLED',
+	`transactionId`	VARCHAR(100)	NULL COMMENT '거래 ID',
+	`paymentData`	JSON	NULL COMMENT '결제 관련 데이터',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`paymentIdx`),
+	INDEX `idx_order` (`orderIdx`),
+	INDEX `idx_member` (`memberIdx`),
+	INDEX `idx_status` (`paymentStatus`)
+) COMMENT '결제 내역';
 
--- review 테이블 샘플 데이터
-INSERT INTO `review` (`reviewIdx`, `rating`, `reviewContent`, `isSecret`, `memberIdx`, `orderIdx`, `productIdx`) VALUES
-(1, 5, '재질이 정말 부드럽고 착용감이 좋습니다. 추천해요!', false, 2, 1, 1),
-(2, 4, '배송이 빠르고 제품 품질이 만족스럽습니다.', false, 2, 2, 3),
-(3, 3, '사이즈가 좀 작은 것 같아요. 한 치수 크게 주문하시길.', false, 4, 4, 5);
+-- 리뷰 테이블
+CREATE TABLE `review` (
+	`reviewIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`memberIdx`	BIGINT	NOT NULL COMMENT '리뷰 작성자',
+	`productIdx`	BIGINT	NOT NULL COMMENT '상품',
+	`orderIdx`	BIGINT	NOT NULL COMMENT '주문',
+	`rating`	TINYINT	NOT NULL COMMENT '평점 (1-5)',
+	`title`	VARCHAR(100)	NULL COMMENT '리뷰 제목',
+	`content`	TEXT	NOT NULL COMMENT '리뷰 내용',
+	`isSecret`	BOOLEAN	NOT NULL DEFAULT FALSE COMMENT '비밀 리뷰 여부',
+	`isRecommended`	BOOLEAN	NULL COMMENT '추천 여부',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`reviewIdx`),
+	INDEX `idx_member` (`memberIdx`),
+	INDEX `idx_product` (`productIdx`),
+	INDEX `idx_rating` (`rating`)
+) COMMENT '상품 리뷰';
 
--- reviewImg 테이블 샘플 데이터
-INSERT INTO `reviewImg` (`reviewImgIdx`, `reviewImgPath`, `reviewIdx`, `productIdx`) VALUES
-(1, '/uploads/reviews/review1_1.jpg', 1, 1),
-(2, '/uploads/reviews/review1_2.jpg', 1, 1),
-(3, '/uploads/reviews/review2_1.jpg', 2, 3);
+-- 리뷰 이미지 테이블
+CREATE TABLE `reviewImg` (
+	`reviewImgIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`reviewIdx`	BIGINT	NOT NULL COMMENT '리뷰 고유번호',
+	`productIdx`	BIGINT	NOT NULL COMMENT '상품 고유번호',
+	`imgName`	VARCHAR(255)	NOT NULL COMMENT '이미지 파일명',
+	`imgPath`	VARCHAR(500)	NOT NULL COMMENT '이미지 경로',
+	`sortOrder`	INT	NOT NULL DEFAULT 0 COMMENT '정렬 순서',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`reviewImgIdx`),
+	INDEX `idx_review` (`reviewIdx`),
+	INDEX `idx_product` (`productIdx`)
+) COMMENT '리뷰 이미지';
 
--- FAQ 테이블 샘플 데이터
-INSERT INTO `FAQ` (`faqIdx`, `contetnType`, `question`, `answer`) VALUES
-(1, 0, '배송기간은 얼마나 걸리나요?', '일반 배송은 2-3일, 당일배송은 오후 6시 이전 주문시 당일 배송됩니다.'),
-(2, 0, '교환/환불은 어떻게 하나요?', '상품 수령 후 7일 이내 마이페이지에서 교환/환불 신청이 가능합니다.'),
-(3, 0, '회원가입 혜택이 있나요?', '신규 회원 가입시 10% 할인쿠폰과 무료배송 쿠폰을 제공합니다.'),
-(4, 1, NULL, '2024년 8월 임시 점검 안내: 8월 10일 새벽 2시~6시 서버 점검이 있을 예정입니다.'),
-(5, 1, NULL, '새로운 결제 시스템 도입으로 더욱 안전하고 편리한 결제가 가능합니다.');
+-- 문의 테이블
+CREATE TABLE `inquiry` (
+	`inquiryIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`memberIdx`	BIGINT	NULL COMMENT '문의자 (비회원 가능)',
+	`inquiryType`	VARCHAR(20)	NOT NULL COMMENT '문의 유형 (PRODUCT, ORDER, GENERAL 등)',
+	`productIdx`	BIGINT	NULL COMMENT '상품 관련 문의',
+	`orderIdx`	BIGINT	NULL COMMENT '주문 관련 문의',
+	`title`	VARCHAR(200)	NOT NULL COMMENT '문의 제목',
+	`content`	TEXT	NOT NULL COMMENT '문의 내용',
+	`contactEmail`	VARCHAR(255)	NULL COMMENT '답변 받을 이메일',
+	`contactPhone`	VARCHAR(20)	NULL COMMENT '연락처',
+	`isSecret`	BOOLEAN	NOT NULL DEFAULT FALSE COMMENT '비밀글 여부',
+	`status`	VARCHAR(20)	NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING, ANSWERED, CLOSED',
+	`answer`	TEXT	NULL COMMENT '답변 내용',
+	`answeredBy`	BIGINT	NULL COMMENT '답변자 (관리자)',
+	`answeredAt`	DATETIME	NULL COMMENT '답변 일시',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`inquiryIdx`),
+	INDEX `idx_member` (`memberIdx`),
+	INDEX `idx_type` (`inquiryType`),
+	INDEX `idx_status` (`status`)
+) COMMENT '고객 문의';
 
--- Inquery 테이블 샘플 데이터
-INSERT INTO `Inquery` (`inqueryIdx`, `category`, `content`, `createAt`, `orderIdx`, `productIdx`, `answer`, `answerAt`) VALUES
-(1, '주문/배송', '주문한 상품이 아직 배송 준비중인데 언제쯤 발송되나요?', '2024-07-26 10:30:00', 3, 2, NULL, NULL),
-(2, '상품문의', '이 제품 색상이 사진과 다른가요?', '2024-07-28 14:15:00', NULL, 1, NULL, NULL),
-(3, '교환/환불', '사이즈가 맞지 않아서 교환하고 싶습니다.', '2024-08-02 16:20:00', 4, 5, NULL, '2024-08-02 18:45:00');
+-- FAQ 테이블
+CREATE TABLE `faq` (
+	`faqIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`category`	VARCHAR(50)	NOT NULL COMMENT 'FAQ 카테고리',
+	`contentType`	VARCHAR(20)	NOT NULL DEFAULT 'FAQ' COMMENT 'FAQ, NOTICE',
+	`question`	VARCHAR(500)	NULL COMMENT '질문 (공지사항은 NULL 가능)',
+	`answer`	TEXT	NOT NULL COMMENT '답변/내용',
+	`sortOrder`	INT	NOT NULL DEFAULT 0 COMMENT '정렬 순서',
+	`isActive`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '활성화 상태',
+	`viewCount`	INT	NOT NULL DEFAULT 0 COMMENT '조회수',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`faqIdx`),
+	INDEX `idx_category` (`category`),
+	INDEX `idx_content_type` (`contentType`),
+	INDEX `idx_sort` (`sortOrder`)
+) COMMENT 'FAQ 및 공지사항';
 
--- purchaseInfo 테이블 샘플 데이터
-INSERT INTO `purchaseInfo` (`purchaseIdx`, `productIdx`, `purchaseDate`, `correspondent`, `correspondentNum`, `correspondentPhon`, `productOption`, `productCost`, `quantity`, `status`) VALUES
-(1, 1, '2024-05-15 09:00:00', '(주)코튼텍스', 12345, 234567890, '화이트/M', 15000, 100, true),
-(2, 2, '2024-05-20 11:30:00', '데님코리아', 23456, 345678901, '다크블루/30', 35000, 50, true),
-(3, 3, '2024-06-01 14:15:00', '애플코리아', 34567, 456789012, '티타늄블루/128GB', 1200000, 20, false),
-(4, 4, '2024-06-05 16:45:00', '애플코리아', 34567, 456789012, '스페이스그레이/256GB', 1300000, 15, true);
+-- 매입 관리 테이블
+CREATE TABLE `purchase` (
+	`purchaseIdx`	BIGINT	NOT NULL AUTO_INCREMENT,
+	`productIdx`	BIGINT	NOT NULL COMMENT '매입 상품',
+	`supplierName`	VARCHAR(100)	NOT NULL COMMENT '공급업체명',
+	`supplierContact`	VARCHAR(100)	NOT NULL COMMENT '공급업체 연락처',
+	`supplierPhone`	VARCHAR(20)	NOT NULL COMMENT '공급업체 전화번호',
+	`productOption`	VARCHAR(100)	NULL COMMENT '상품 옵션',
+	`unitCost`	DECIMAL(10,2)	NOT NULL COMMENT '매입 단가',
+	`quantity`	INT	NOT NULL COMMENT '매입 수량',
+	`totalCost`	DECIMAL(12,2)	NOT NULL COMMENT '총 매입 비용',
+	`purchaseDate`	DATETIME	NOT NULL COMMENT '매입 일자',
+	`status`	VARCHAR(20)	NOT NULL DEFAULT 'TEMP' COMMENT 'TEMP:임시저장, CONFIRMED:매입확정',
+	`memo`	TEXT	NULL COMMENT '메모',
+	`createdAt`	DATETIME	NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt`	DATETIME	NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`purchaseIdx`),
+	INDEX `idx_product` (`productIdx`),
+	INDEX `idx_purchase_date` (`purchaseDate`),
+	INDEX `idx_status` (`status`)
+) COMMENT '상품 매입 관리';
 
--- 데이터 삽입 완료 확인
-SELECT 'Member' as TableName, COUNT(*) as RecordCount FROM Member
-UNION ALL
-SELECT 'Products', COUNT(*) FROM Products
-UNION ALL
-SELECT 'Orders', COUNT(*) FROM Orders
-UNION ALL
-SELECT 'profile', COUNT(*) FROM profile
-UNION ALL
-SELECT 'address', COUNT(*) FROM address;
+-- 기타 카테고리 테이블 (기존 category 테이블 유지)
+CREATE TABLE `category` (
+	`categoryIdx`	VARCHAR(10)	NOT NULL COMMENT '카테고리 코드',
+	`categoryName`	VARCHAR(50)	NOT NULL COMMENT '카테고리명',
+	`description`	TEXT	NULL COMMENT '설명',
+	`isActive`	BOOLEAN	NOT NULL DEFAULT TRUE COMMENT '활성화 상태',
+	PRIMARY KEY (`categoryIdx`)
+) COMMENT '기타 카테고리';
+
+-- ============================================
+-- 외래 키 제약 조건
+-- ============================================
+
+-- 프로필 관련
+ALTER TABLE `profile` ADD CONSTRAINT `FK_member_TO_profile` 
+FOREIGN KEY (`memberIdx`) REFERENCES `member` (`memberIdx`) ON DELETE CASCADE;
+
+-- 주소 관련
+ALTER TABLE `address` ADD CONSTRAINT `FK_member_TO_address` 
+FOREIGN KEY (`memberIdx`) REFERENCES `member` (`memberIdx`) ON DELETE CASCADE;
+
+-- 상품 카테고리 관련 (자기 참조)
+ALTER TABLE `productCategory` ADD CONSTRAINT `FK_productCategory_TO_productCategory` 
+FOREIGN KEY (`parentIdx`) REFERENCES `productCategory` (`categoryIdx`) ON DELETE SET NULL;
+
+-- 상품 관련
+ALTER TABLE `products` ADD CONSTRAINT `FK_productCategory_TO_products` 
+FOREIGN KEY (`categoryIdx`) REFERENCES `productCategory` (`categoryIdx`);
+
+ALTER TABLE `productPost` ADD CONSTRAINT `FK_products_TO_productPost` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`) ON DELETE CASCADE;
+
+ALTER TABLE `productOption` ADD CONSTRAINT `FK_products_TO_productOption` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`) ON DELETE CASCADE;
+
+-- 주문 관련
+ALTER TABLE `orders` ADD CONSTRAINT `FK_member_TO_orders` 
+FOREIGN KEY (`memberIdx`) REFERENCES `member` (`memberIdx`);
+
+ALTER TABLE `orderItems` ADD CONSTRAINT `FK_orders_TO_orderItems` 
+FOREIGN KEY (`orderIdx`) REFERENCES `orders` (`orderIdx`) ON DELETE CASCADE;
+
+ALTER TABLE `orderItems` ADD CONSTRAINT `FK_products_TO_orderItems` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`);
+
+ALTER TABLE `orderItems` ADD CONSTRAINT `FK_productOption_TO_orderItems` 
+FOREIGN KEY (`optionIdx`) REFERENCES `productOption` (`optionIdx`) ON DELETE SET NULL;
+
+-- 결제 관련
+ALTER TABLE `paymentHistory` ADD CONSTRAINT `FK_orders_TO_paymentHistory` 
+FOREIGN KEY (`orderIdx`) REFERENCES `orders` (`orderIdx`);
+
+ALTER TABLE `paymentHistory` ADD CONSTRAINT `FK_member_TO_paymentHistory` 
+FOREIGN KEY (`memberIdx`) REFERENCES `member` (`memberIdx`);
+
+-- 리뷰 관련
+ALTER TABLE `review` ADD CONSTRAINT `FK_member_TO_review` 
+FOREIGN KEY (`memberIdx`) REFERENCES `member` (`memberIdx`);
+
+ALTER TABLE `review` ADD CONSTRAINT `FK_products_TO_review` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`);
+
+ALTER TABLE `review` ADD CONSTRAINT `FK_orders_TO_review` 
+FOREIGN KEY (`orderIdx`) REFERENCES `orders` (`orderIdx`);
+
+ALTER TABLE `reviewImg` ADD CONSTRAINT `FK_review_TO_reviewImg` 
+FOREIGN KEY (`reviewIdx`) REFERENCES `review` (`reviewIdx`) ON DELETE CASCADE;
+
+ALTER TABLE `reviewImg` ADD CONSTRAINT `FK_products_TO_reviewImg` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`);
+
+-- 문의 관련
+ALTER TABLE `inquiry` ADD CONSTRAINT `FK_member_TO_inquiry` 
+FOREIGN KEY (`memberIdx`) REFERENCES `member` (`memberIdx`) ON DELETE SET NULL;
+
+ALTER TABLE `inquiry` ADD CONSTRAINT `FK_products_TO_inquiry` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`) ON DELETE SET NULL;
+
+ALTER TABLE `inquiry` ADD CONSTRAINT `FK_orders_TO_inquiry` 
+FOREIGN KEY (`orderIdx`) REFERENCES `orders` (`orderIdx`) ON DELETE SET NULL;
+
+ALTER TABLE `inquiry` ADD CONSTRAINT `FK_member_TO_inquiry_answerer` 
+FOREIGN KEY (`answeredBy`) REFERENCES `member` (`memberIdx`) ON DELETE SET NULL;
+
+-- 매입 관련
+ALTER TABLE `purchase` ADD CONSTRAINT `FK_products_TO_purchase` 
+FOREIGN KEY (`productIdx`) REFERENCES `products` (`productIdx`);
