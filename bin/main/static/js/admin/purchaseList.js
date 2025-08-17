@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-console.log('purchaseList.js load')
-=======
 // 매입 목록 페이지
 console.log('purchaseList.js load')
 
@@ -58,4 +55,3 @@ const renderPurchaseTable = (data) => {
 
 
 selectAll();
->>>>>>> JIMYUNG
