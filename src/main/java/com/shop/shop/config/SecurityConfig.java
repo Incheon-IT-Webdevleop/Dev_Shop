@@ -22,6 +22,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((httpReq) -> {
             httpReq
+                    .requestMatchers("/css/**", "/js/**", "/categoryImages/**", "/data/**", "/img/**").permitAll() // CSS, JS, 이미지 폴더에 대해 접근 허용
                     //.requestMatchers(AntPathRequestMatcher.antMatcher("/category")).hasRole("USER") // 로그인도니 모든 회원 접속 가능
                     //.requestMatchers(AntPathRequestMatcher.antMatcher("/record")).hasRole("USER") // 로그인도니 모든 회원 접속 가능
                     .requestMatchers(AntPathRequestMatcher.antMatcher("/**")).permitAll(); // 그 외 모든 접속자 허용

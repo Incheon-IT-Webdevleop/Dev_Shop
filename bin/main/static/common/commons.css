@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.flex{
+    display: flex;
+}
+
+.align-item-ct{
+    align-items: center;
+}
+
+.justify-content-ct{
+    justify-content: center;
+}
+
+.flex-direction-row{
+    flex-direction: row;
+}

@@ -5,4 +5,20 @@
     <select id="selectOne" resultType="String">
         select current_timestamp from member
     </select>
+
+    <select id="countByEmail" parameterType="string" resultType="int">
+        select 
+            count(memberIdx)
+        from 
+            member
+        where 
+            email = #{email}
+    </select>
+
+    <insert id="insertUser" parameterType="com.shop.shop.user.UserRequestDTO">
+        insert  
+            into member(email, password, name, phone, loginType, isActive, role, joinAt)
+        values
+            (#{email}, #{password}, #{name}, #{phone}, "일반", true, 0, CURTIME())
+    </insert>
 </mapper>
