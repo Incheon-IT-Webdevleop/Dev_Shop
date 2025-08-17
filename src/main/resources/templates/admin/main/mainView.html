@@ -15,41 +15,39 @@
         <div class="container">
             <div class="row g-2">
                 <div class="col-6 oderStatusChart">
-                    날짜별 주문현황 그래프
+                    최근 6개월 월별 주문 CHART
 
                     <canvas id="myChart"></canvas>
                 </div>
                 <div class="col-6 oderStatusTable">
                     <p>날짜별 주문현황 테이블</p>
 
-                    <table class="table">
-                        <thead>
+                    <table class="table table-striped">
+                        <thead class="table-dark">
                             <tr>
-                            <th scope="col"></th>
-                            <th scope="col">날짜</th>
-                            <th scope="col">주문</th>
-                            <th scope="col">환불</th>
-                            <th scope="col">교환</th>
+                            <th scope="col">날짜(년/월)</th>
+                            <th scope="col">주문현황</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
+                            <!-- <tr>
+                                <th scope="row"></th>
                                 <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
                             </tr>
                             <tr>
-                                <th scope="row">2</th>
+                                <th scope="row"></th>
                                 <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
                             </tr>
                             <tr>
-                                <th scope="row">3</th>
+                                <th scope="row"></th>
                                 <td>John</td>
-                                <td>Doe</td>
-                                <td>@social</td>
+                            </tr> -->
+                            <tr>     
+                                <td colspan="2" class="text-center">
+                                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                                            <span class="visually-hidden">Loading</span>
+                                        </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -86,6 +84,8 @@
                     
                     <table class="table">
                         <th scope="col">상품후기</th>
+                        <td scope="row">0/0</td>
+                        <th scope="col">1:1문의</th>
                         <td scope="row">0/0</td>
                     </table>
                 </div>

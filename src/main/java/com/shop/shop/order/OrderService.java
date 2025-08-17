@@ -6,17 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class OrderService implements OrderMapper {
+public class OrderService {
     private final OrderMapper orderMapper;
 
-    @Override
-    public List<OrderDto> getOderByMonth() {
-        System.out.println(orderMapper.getOderByMonth());
+    public List<Map<String, Object>> getOderByMonth() {
+        System.out.println(orderMapper.getOderByMonth().size());
         return orderMapper.getOderByMonth();
     }
 }

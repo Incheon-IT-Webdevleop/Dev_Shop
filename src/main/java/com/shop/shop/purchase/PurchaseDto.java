@@ -1,9 +1,9 @@
 package com.shop.shop.purchase;
 
+import java.time.LocalDateTime;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class PurchaseDto {
@@ -11,8 +11,11 @@ public class PurchaseDto {
     @Schema(description = "매입 고유번호", example = "1")
     private long purchaseIdx;
 
+    @Schema(description = "매입상품 고유번호", example = "2")
+    private long productIdx;
+
     @Schema(description = "매입 날짜", example = "2025-03-04")
-    private Date purchaseData;
+    private LocalDateTime purchaseDate;
 
     @Schema(description = "거래처명", example = "(주)대한민국")
     private String correspondent;   // 거래처명

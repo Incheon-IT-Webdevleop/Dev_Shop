@@ -27,4 +27,9 @@ public class ViewAdminController {
         return "/admin/salesMng/registPurchase";
     }
 
+    // 매입관리 - 매입 상세조회 페이지
+    @GetMapping("/salesMng/purchaseDetail")
+    public String purchaseDetail() {
+        return "admin/salesMng/purchaseDetail";
+    }
 }
