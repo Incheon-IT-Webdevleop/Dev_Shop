@@ -1,3 +1,4 @@
+/* 폰트 정의 */
 @font-face {
     font-family: 'SUITE-Regular';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
@@ -9,12 +10,44 @@
     font-family: 'SUIT-Bold';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2') format('woff2');
     font-weight: bold;
-    font-style: bold;
+    font-style: normal;
 }
 
+/* 전체 기본 스타일 */
+body {
+    font-family: 'SUITE-Regular';
+    margin: 0;
+    padding: 0;
+}
 
-* {
-  font-family: 'SUIT-Regular';
-  margin: 0;
-  padding: 0;
+html, body {
+    height: 100%;
+}
+
+/* vh-75 클래스 */
+.vh-75 {
+    height: 75vh !important;
+}
+
+/* container 스타일 */
+.container {
+    display: flex;               /* flex로 변경 */
+    align-items: center;         /* 세로 가운데 정렬 */
+    justify-content: center;     /* 가로 가운데 정렬 */
+    margin: auto;
+    height: 100%;
+}
+
+.form-container{
+    width: 60vw;
+    max-width: 550px;
+    min-width: 500px;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 40px;
+}
+
+.flex{
+    display: flex;
 }
