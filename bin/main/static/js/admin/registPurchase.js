@@ -1,0 +1,1 @@
+console.log("registPurchase.js load")
