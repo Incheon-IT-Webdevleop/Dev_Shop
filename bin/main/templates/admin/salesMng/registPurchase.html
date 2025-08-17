@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{admin/index}">   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>매입관리(매입등록)</title>
+    <link rel="stylesheet" href="/css/admin/index.css">
+    <link rel="stylesheet" href="/css/admin/registPurchase.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div>
+            <p>매입 등록</p>
+        </div>
+        
+        <div>
+            <p>거래처 정보</p>
+            <div class="input-group mb-3">
+                <span class="input-group-text">거래처명</span>
+                <input type="text" class="form-control" placeholder="거래처명" aria-label="correspondent">
+                <span class="input-group-text">사업자 등록번호</span>
+                <input type="text" class="form-control" placeholder="###-###-####" aria-label="correspondentNum">
+                <span class="input-group-text">연락처</span>
+                <input type="text" class="form-control" placeholder="###-####-####" aria-label="correspondentPhone">
+            </div>
+        </div>
+
+        <div>
+            <p>매입 날짜(연/월/일)</p>
+            
+            <div class="purchaseDateSelect">
+                <select class="form-select" aria-label="Default select year">
+                    <option selected>년</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <select class="form-select" aria-label="Default select month">
+                    <option selected>월</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <select class="form-select" aria-label="Default select day">
+                    <option selected>일</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div>
+            <div>
+                <p>매입 품목</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">기존상품 불러오기</button>
+            </div>
+
+            <!-- 기존상품 불러오기 Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">기존 상품 불러오기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div>
+                <table class="table">
+                    <thead>
+                        <th scope="col">상품명</th>
+                        <th scope="col">수량</th>
+                        <th scope="col">금액</th>
+                        <th scope="col">총액</th>
+                        <th scope="col">비고</th>
+                    </thead>
+                    <tbody>
+                        <td>티셔츠A</td>
+                        <td>3</td>
+                        <td>24,000</td>
+                        <td>82,000</td>
+                        <td>마지막 재고</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary">(임시)저장</button>
+                <button type="button" class="btn btn-primary">확정</button>
+                <button type="button" class="btn btn-primary">취소</button>
+            </div>
+        </div>
+
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script src="/js/admin/registPurchase.js"></script>
+    </th:block>
+</body>
+</html>

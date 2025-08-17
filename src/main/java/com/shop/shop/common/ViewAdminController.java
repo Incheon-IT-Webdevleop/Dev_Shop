@@ -32,6 +32,4 @@ public class ViewAdminController {
     public String purchaseDetail() {
         return "admin/salesMng/purchaseDetail";
     }
-
-
 }

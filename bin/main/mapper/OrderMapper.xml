@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.shop.order.OrderMapper">
+
+    <!-- 월별 주문현황 조회 쿼리 -->
+    <select id="getOderByMonth" resultType="java.util.HashMap">
+        <![CDATA[
+       SELECT
+           DATE_FORMAT(orderAt, '%Y-%m') AS yearMonth,
+           COUNT(*) AS monthlyOrderCount,
+           SUM(TotalPrice) AS monthlyTotalAmount
+       FROM Orders
+       WHERE orderAt >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+         AND orderAt < DATE_FORMAT(CURDATE(), '%Y-%m-01')
+       GROUP BY DATE_FORMAT(orderAt, '%Y-%m')
+       ORDER BY yearMonth;
+       ]]>
+    </select>
+</mapper>
