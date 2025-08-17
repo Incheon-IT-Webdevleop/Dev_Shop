@@ -254,5 +254,5 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/gradle
 
 .settings/*
-.bin/*
+bin/*
 .vscode
