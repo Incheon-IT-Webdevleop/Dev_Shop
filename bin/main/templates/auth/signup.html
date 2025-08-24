@@ -41,26 +41,40 @@
                     <button class="btn btn-secondary w-100" type="button" id="certificationBtn">인증번호</button>
                 </div>
             </div>
+            <small id="emailRule" class="form-text text-muted d-none mb-2">
+                이메일는 영어와 숫자만 입력할 수 있습니다.
+            </small>
 
             <!-- 비밀번호  -->
             <div class="mb-2">
                 <input class="form-control" id="password" type="password" placeholder="비밀번호">
             </div>
+            <small id="passwordRule1" class="form-text text-muted d-none mb-2">
+                비밀번호는 영어와 숫자만 입력할 수 있습니다.
+            </small>
 
             <!-- 비밀번호 확인 -->
             <div class="mb-2">
                 <input class="form-control" id="confirmPassword" type="password" placeholder="비밀번호 확인">
             </div>
+
+            <small id="passwordRule2" class="form-text text-muted d-none mb-2">
+                비밀번호 확인은 영어와 숫자만 입력할 수 있습니다.
+            </small>
             
             <!-- 이름 -->
             <input class="form-control mb-2" type="text" placeholder="이름" id="name" maxlength="5">
             
             <!-- 휴대폰 -->
             <div class="mb-2 d-flex">
-                <input class="form-control flex-grow-1 w-50" type="text" placeholder="" id="phone1" maxlength="3">
+                <input class="form-control flex-grow-1 w-50" type="text" placeholder="" id="phone1" maxlength="3" value="010">
                 <input class="form-control flex-grow-2" type="text" placeholder="" id="phone2" maxlength="4">
                 <input class="form-control flex-grow-2" type="text" placeholder="" id="phone3" maxlength="4">
             </div>
+
+            <small id="phoneRule" class="form-text text-muted d-none mb-2">
+                휴대폰 번호는 숫자만 입력할 수 있습니다.
+            </small>
 
             <!-- 주소 -->
             <div class="mb-2 flex">

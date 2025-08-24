@@ -117,6 +117,11 @@ $(document).ready(function() {
 
     // 회원가입 버튼
     $('#submitBtn').on('click', function(){
+
+         if (!validateForm()) {
+            return;
+        }
+
         // id로 값 받아오기
         // 이메일 앞부분
         const localEmail = $('#localEmail').val();
@@ -173,4 +178,119 @@ $(document).ready(function() {
             }
         });
     })
+
+    // 휴대폰 입력 조건
+    $("#phone1, #phone2, #phone3").on("focus", function () {
+        $("#phoneRule").removeClass("d-none");
+    }).on("blur", function () {
+        $("#phoneRule").addClass("d-none");
+    }).on("input", function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // 아이디 입력 조건
+    $("#localEmail").on("focus", function () {
+        $("#emailRule").removeClass("d-none");
+    }).on("blur", function () {
+        $("#emailRule").addClass("d-none");
+    }).on("input", function () {
+        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+    });
+
+    // 비밀번호 입력 조건
+    $("#password").on("focus", function () {
+        $("#passwordRule1").removeClass("d-none");
+    }).on("blur", function () {
+        $("#passwordRule1").addClass("d-none");
+    }).on("input", function () {
+        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+    });
+
+    // 비밀번호 확인 입력 조건
+    $("#confirmPassword").on("focus", function () {
+        $("#passwordRule2").removeClass("d-none");
+    }).on("blur", function () {
+        $("#passwordRule2").addClass("d-none");
+    }).on("input", function () {
+        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+    });
 });
+
+// 유효성 검사
+function validateForm() {
+    // 이메일
+    let localEmail = $("#localEmail").val().trim();
+    let domainEmail = $("#domainEmail").val();
+    let email = localEmail + domainEmail;
+    let emailRegex = /^[0-9a-zA-Z]([-.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
+    if (localEmail === "" || !emailRegex.test(email)) {
+        alert("올바른 이메일을 입력하세요.");
+        $("#localEmail").focus();
+        return false;
+    }
+
+    // 비밀번호
+    let password = $("#password").val().trim();
+    let confirmPassword = $("#confirmPassword").val().trim();
+    let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,16}$/;
+
+    if (!passwordRegex.test(password)) {
+        alert("비밀번호는 8~16자, 영문+숫자+특수문자를 포함해야 합니다.");
+        $("#password").focus();
+        return false;
+    }
+    if (password !== confirmPassword) {
+        alert("비밀번호 확인이 일치하지 않습니다.");
+        $("#confirmPassword").focus();
+        return false;
+    }
+
+    // 이름
+    let name = $("#name").val().trim();
+    if (name === "" || name.length < 2) {
+        alert("이름은 2글자 이상 입력하세요.");
+        $("#name").focus();
+        return false;
+    }
+
+    // 휴대폰 번호
+    let phone1 = $("#phone1").val().trim();
+    let phone2 = $("#phone2").val().trim();
+    let phone3 = $("#phone3").val().trim();
+    let phoneRegex = /^[0-9]+$/;
+
+    if (!(phoneRegex.test(phone1) && phoneRegex.test(phone2) && phoneRegex.test(phone3))) {
+        alert("휴대폰 번호는 숫자만 입력하세요.");
+        $("#phone2").focus();
+        return false;
+    }
+    if (phone2.length < 3 || phone3.length < 4) {
+        alert("휴대폰 번호를 올바르게 입력하세요.");
+        $("#phone2").focus();
+        return false;
+    }
+
+    // 주소
+    let zipcode = $("#zipcode").val().trim();
+    let address = $("#address").val().trim();
+    let detailAddress = $("#detailAddress").val().trim();
+
+    if (zipcode === "" || address === "" || detailAddress === "") {
+        alert("주소를 모두 입력하세요.");
+        $("#zipcode").focus();
+        return false;
+    }
+
+    return true;
+}
+
+// 숫자만 입력 가능하게 처리
+function onlyNumberInput(element) {
+    element.value = element.value.replace(/[^0-9]/g, '');
+}
+
+// 영어 숫자만 가능
+function onlyEngNumInput(element) {
+    element.value = element.value.replace(/[^a-zA-Z0-9]/g, '');
+}
