@@ -8,8 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api")
 public class ViewApiController {
 
+    // 메인 페이지
+    @GetMapping("")
+    public String main(){
+        return "shop/main/mainView";
+    }
+
+    // 회원가입 페이지
     @GetMapping("/auth/signup")
     public String signupPage(){
         return "auth/signup";
+    }
+
+    // 로그인 페이지
+    @GetMapping("/auth/login")
+    public String loginPage(){
+        return "auth/signIn";
     }
 }

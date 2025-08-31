@@ -203,7 +203,7 @@ $(document).ready(function() {
     }).on("blur", function () {
         $("#passwordRule1").addClass("d-none");
     }).on("input", function () {
-        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+        this.value = this.value.replace(/[^a-zA-Z0-9!@#$%^&*()]/g, '');
     });
 
     // 비밀번호 확인 입력 조건
@@ -212,7 +212,7 @@ $(document).ready(function() {
     }).on("blur", function () {
         $("#passwordRule2").addClass("d-none");
     }).on("input", function () {
-        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+        tthis.value = this.value.replace(/[^a-zA-Z0-9!@#$%^&*()]/g, '');
     });
 });
 

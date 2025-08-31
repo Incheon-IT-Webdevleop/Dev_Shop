@@ -2,13 +2,17 @@ package com.shop.shop.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserService{
+    
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public String selectOne() {
 //        System.out.println(userMapper.selectOne());
@@ -34,8 +38,23 @@ public class UserService{
         return count > 0;
     }
 
-    public void insertUser(UserRequestDTO user){
+    // 회원 가입
+    public void insertUser(UserRequestDTO user) {
+        if (user.getProvider() == null) {
+            user.setProvider("local");
+
+            // local 가입일 경우 비밀번호 암호화
+            if (user.getPassword() != null && !user.getPassword().isBlank()) {
+                String encodedPw = passwordEncoder.encode(user.getPassword());
+                user.setPassword(encodedPw);
+            }
+        }
+
         userMapper.insertUser(user);
     }
 
+    // 이메일로 찾기
+    public UserDTO findByEmail(String email){
+        return userMapper.findByEmail(email);
+    }
 }

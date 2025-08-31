@@ -2,18 +2,31 @@ package com.shop.shop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.shop.shop.user.CustomOAuth2UserService;
+import com.shop.shop.user.CustomUserDetailsService;
+import com.shop.shop.user.UserDTO;
+import com.shop.shop.user.UserService;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-//    @Autowired
-//    private UserService userService;
-//    @Autowired
-//    private PurchaseService purchaseService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final UserService userService;
+
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
@@ -40,55 +53,77 @@ public class SecurityConfig {
         // 5. 시큐리티 로그인 (시큐리티에서 제공하는 로그인 기능 커스텀)
         // JSON 형식이 아닌 Form 형식으로 지원
         http.formLogin( loginform ->
-                loginform
-                        .loginPage("/auth/login")             // 로그인할 view page url 정의
-                        .loginProcessingUrl("/auth/login.do") // 로그인을 처리할 URL 정의 : POST 방식
-                        .usernameParameter("email")               // 로그인에 사용할 id 변수명
-                        .passwordParameter("password")              // 로그인에 사용할 password 변수
-                        //.defaultSuccessUrl("/")                 // 로그인 성공시 이동할 page url 정의
-                        //.failureUrl("/member/login")     // 로그인 실패시 이동할 page url 정의
-                        // fetch/axios 처리에서는 아래와같이 사용
-                        .successHandler((request, response, exception) -> {
-                            System.out.println("로그인 성공!!!");
-                            response.setContentType("application/json");    // 응답 방식을 JSON으로 변경
-                            response.getWriter().println("true");           //JSON 형식의 true 응답
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            System.out.println("로그인 실패!!! : " + exception.getMessage() );
-                            exception.printStackTrace(); // 스택 트레이스 출력
-                            response.setContentType("application/json");
-                            response.getWriter().println("false");
-                        })
+            loginform
+                // 로그인할 view page url 정의
+                .loginPage("/api/auth/login")             
+                // 로그인을 처리할 URL 정의 : POST 방식
+                .loginProcessingUrl("/api/auth/login")
+                // 로그인에 사용할 id 변수명
+                .usernameParameter("email")               
+                // 로그인에 사용할 password 변수
+                .passwordParameter("password")              
+                //.defaultSuccessUrl("/")                 // 로그인 성공시 이동할 page url 정의
+                //.failureUrl("/member/login")     // 로그인 실패시 이동할 page url 정의
+                // fetch/axios 처리에서는 아래와같이 사용
+                .successHandler((request, response, exception) -> {
+                // Spring Security 인증 정보에서 이메일 가져오기
+                    String email = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+                    // DB에서 사용자 정보 조회
+                    UserDTO user = userService.findByEmail(email);
+                    // 세션에 저장
+                    request.getSession().setAttribute("user", user);
+                    response.setContentType("application/json");    // 응답 방식을 JSON으로 변경
+                    response.getWriter().write("{\"success\":true}");
+                    response.getWriter().flush();           //JSON 형식의 true 응답
+                })
+                .failureHandler((request, response, exception) -> {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"success\":false}");
+                    response.getWriter().flush();       
+                })
         );
+
+        http.authenticationProvider(authenticationProvider(customUserDetailsService, passwordEncoder()));
 
         // 6. 시큐리티 로그아웃 (시큐리티에서 제공하는 로그아웃 기능 커스텀)
-        // 1). 시큐리티 설정클래스에서 로그인 관련된 설정 코드를 작성한다.
-        http.logout(logoutform ->
-                logoutform
-                        .logoutUrl("/auth/logout.do")          // 로그아웃 요청할 url : GET 방식
-                        .logoutSuccessUrl("/")                  // 로그아웃 성공시 이동할 page url 정의
-                        .invalidateHttpSession(true)            // 로그아웃 성공시 (로그인) 세션 초기화
+        http.logout(logout -> 
+            logout
+                .logoutUrl("/api/auth/logout")          // 로그아웃 요청 URL
+                .invalidateHttpSession(true)               // 세션 무효화
+                .deleteCookies("JSESSIONID")               // 쿠키 제거 (선택)
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    // 세션에서 loginUser 제거 (invalidateHttpSession=true면 없어도 됨)
+                    request.getSession().removeAttribute("user");
 
+                    // JSON 응답
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"success\":true}");
+                    response.getWriter().flush();
+                })
         );
-        // 2).로그인시 암호화된 패스워드를 검증할 암호화 클래스
 
-        // 7. 로그인을 처리할 서비스 객체 정의
-        //http.userDetailsService(userService);
+        // OAuth2
+         http.oauth2Login(oauth2Login -> {
+            oauth2Login
+                .loginPage("/api/auth/login") // 같은 로그인 페이지 사용
+                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService)) // OAuth2 사용자 정보 처리
+                .defaultSuccessUrl("/"); // 로그인 성공 시 이동할 URL
+        });
 
-        // 8. 시큐리티에서 Oauth2 로그인 페이지와 (커스텀/오버라이딩/재정의) 서비스 정의
-//        http.oauth2Login(oauth2Login -> {
-//            oauth2Login
-//                    .loginPage("/auth/login")
-//                    .userInfoEndpoint(userinfo -> {
-//                        userinfo.userService(userService); // oauth2에서 로그인 성공시 유저 정보를 받을 객체 정의
-//                    });
-//        });
-
-        // cors 설정
-//        http
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
-        // 2. http 객체를 빌드/실행하여 보안 필터 체인을 생성
         return http.build();
+    }
+
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService userDetailsService,
+                                                            PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
     }
 }

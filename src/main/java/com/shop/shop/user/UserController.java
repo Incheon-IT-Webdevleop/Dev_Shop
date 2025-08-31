@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity<?> signUp(@RequestBody UserRequestDTO user){
         
         userService.insertUser(user);
-      
+        
         return  ResponseEntity.status(201).body("회원 가입이 성공적으로 되었습니다.");
     }
 }

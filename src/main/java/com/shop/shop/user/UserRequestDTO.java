@@ -25,4 +25,7 @@ public class UserRequestDTO {
     @Schema(description = "입력한 주소", example = "{'zipcode':'12345', 'base':'서울시 관악구 가로 1', 'detail':'105동 1006호'}")
     private AddressDTO address;
 
+    @Schema(description = "로그인한 형태", example = "1")
+    private String provider; // LOCAL, GOOGLE, NAVER
+
 }

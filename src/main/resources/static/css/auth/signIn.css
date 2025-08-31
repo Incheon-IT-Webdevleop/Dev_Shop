@@ -24,11 +24,6 @@ html, body {
     height: 100%;
 }
 
-/* vh-75 클래스 */
-.vh-75 {
-    height: 75vh !important;
-}
-
 /* container 스타일 */
 .container {
     display: flex;               /* flex로 변경 */
@@ -39,16 +34,16 @@ html, body {
 }
 
 .form-container{
-    width: 60vw;
-    max-width: 550px;
-    min-width: 500px;
+    width: 50vw;
+    max-width: 400px;
+    min-width: 300px;
     margin: auto;
     border: 1px solid black;
     border-radius: 10px;
     padding: 40px;
 }
 
-.flex{
-    display: flex;
+.socialBtn{
+    width: 140px;
+    cursor: pointer;
 }
-

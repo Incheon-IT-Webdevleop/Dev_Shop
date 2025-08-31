@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="/js/user/signIn.js"></script>
+    <!-- 주소 api -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- BootStrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 개인 CSS -->
+    <link th:href="@{/css/auth/signIn.css}" rel="stylesheet">
+    <link th:href="@{/css/common/commons.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container vh-75">
+            <!-- 제목 -->
+            <h2 class="mb-5 text-center">로그인</h2>
+            
+            <form class="mb-2" id="loginForm">
+                <input class="form-control mb-2" type="email" id="userEmail" name="email" placeholder="이메일">
+                <input class="form-control mb-2" type="password" id="userPassword" name="password" placeholder="비밀번호">
+                <button class="btn btn-primary w-100" type="submit" id="submitBtn">로그인</button>
+            </form>
+
+            <img class="socialBtn" th:src="@{/img/login/btnG_축약형.png}" alt="네이버 로그인"  id="naverLoginBtn" >
+
+        </div>
+    </div>
+</body>
+</html>
